@@ -1,14 +1,16 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { DailyPlanEntry } from '../models/dailyplanentry';
+import { DailyPlanEntry } from '../models/dailyplanentry/dailyplanentry';
 
 @Injectable()
 export class DailyPlanEntryService {
 
   private webapiUrl = 'api/dailyplanentry';  // URL to web api
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private configService : ConfigService) {
+    this.webapiUrl = configService.getDailyPlanEntryWebApiUrl();
+   }
 
   getDailyPlanEntries() {
     return this.http.get(this.webapiUrl)
@@ -33,6 +35,7 @@ export class DailyPlanEntryService {
                .then(() => entry)
                .catch(this.handleError);
   }
+  
   private handleError(error: any) {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);
